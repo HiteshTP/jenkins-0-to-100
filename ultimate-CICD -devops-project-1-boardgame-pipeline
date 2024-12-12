@@ -4,7 +4,9 @@ agent {label'slave}
 tools{   // tools is used when ever we install the plugin for jenkins that,plugins use inside the pipeline we need to define it 
 jdk 'jdk17'
 maven 'maven3'
-
+}
+environment {
+SCANNER_HOME= TOOL 'sonar-scanner'
 stages{
 stage('clone from github'){
 steps{
@@ -36,8 +38,54 @@ sh 'trivy fs --formate table -o trivy-fs-report.html .' //using this command the
 stage('sonarqube analysis'){
 steps{
 echo 'to find and test the functionality of the code'
-sh 'mvn test'
+withSonarQubeEnv('sonar'){
+sh ''' $SCANNER_HOME/bin/sconner-scaner -Dsonar.projectName=BoardGame -Dsonar.projectKey-BoardGame\
+        // $SCANNER_HOME/bin/sonar-scaner means $SCANNER_HOME is a environment we are calling the sonar-scanner that present in the bin path
+       -Dsoanr.java.binaries= . '''  // this java project so we call .java and .binaries is a file location 
 }
 }
+}
+stage(' quality gate'){
+steps{
+script { 
+waitForQualityGate abortPipeline: false, credentialsID: '<give the sonarqube credential id'
+}
+}
+}
+stage('Build'){
+steps{
+sh 'mvn package'
+}
+}
+stage('Build and Tag Docker Image'){
+steps{
+script{
+withDockerRegistry(credentialsID: 'docker-crd', toolName: 'docker') {
+sh 'docker build -t boardgame .'
+sh 'docker tag boardgame hiteshtp/boargame'
+}
+}
+}
+}
+stage('image scan'){
+steps{
+sh 'trivy image --formate table -o trivy-fs-report.html hiteshtp/boargame'
+}
+}
+stage('Push Docker Image'){
+steps{
+script{
+withDockerRegistry(credentialsID: 'docker-crd', toolName: 'docker') {
+sh 'docker build -t boardgame .'
+sh 'docker push hiteshtp/boargame'
+}
+}
+}
+}
+}
+}
+}
+}
+
 }
 }
