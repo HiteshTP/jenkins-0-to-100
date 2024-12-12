@@ -25,5 +25,11 @@ echo 'to find and test the functionality of the code'
 sh 'mvn test'
 }
 }
+stage('File system scan'){
+steps{
+echo 'we are going to perform a vulnerability scan on our source code to find out if there is any sensitive data'
+sh 'mvn test'
+}
+}
 }
 }
