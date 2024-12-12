@@ -1,4 +1,29 @@
 pipeline{
-    agent slane
-  
+agent {label'slave}
+
+tools{   // tools is used when ever we install the plugin for jenkins that,plugins use inside the pipeline we need to define it 
+jdk 'jdk17'
+maven 'maven3'
+
+stages{
+stage('clone from github'){
+steps{
+echo 'cloning was sucesful'
+git url: '<url of our git>, branch: 'main'
+echo 'cloned successful'
+}
+}
+stage('comploling the stage'){
+steps{
+echo 'compling stage because to find out any syntax based error in pipeline or not'
+sh 'mvn compile'
+}
+}
+stage('test'){
+steps{
+echo 'to find and test the functionality of the code'
+sh 'mvn test'
+}
+}
+}
 }
