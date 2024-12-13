@@ -6,7 +6,7 @@ jdk 'jdk17'
 maven 'maven3'
 }
 environment {
-SCANNER_HOME= TOOL 'sonar-scanner'
+SCANNER_HOME= tool 'sonar-scanner'
 stages{
 stage('clone from github'){
 steps{
