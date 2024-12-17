@@ -65,7 +65,16 @@ pipeline{
                 sh 'mvn package'
             }
         }
-        
+         stage('build and Tag Docker Image and push to dockedhub'){
+            steps{
+                script{
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        sh 'docker build -t boardgame .'
+                        sh 'docker tag boardgame hiteshtp/boardgame'
+                        sh 'docker push hiteshtp/boardgame'
+                    }
+                }
+            }
     }
     
 }
