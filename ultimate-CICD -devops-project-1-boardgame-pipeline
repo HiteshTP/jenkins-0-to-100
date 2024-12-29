@@ -36,7 +36,7 @@ pipeline{
                 sh 'trivy fs .' //using this command trivy generate the report inside the concole log it is hard to analise and not a good practice
                          or
                 sh 'trivy fs --format table -o trivy-fs-report.html .' //using this command the trivy generate the report in a specific formate and export it inside a seperate file
-                (here --formate table : means it generate the report in table formate, trivy-fs-report.html -this is a file name which the report that will be exported and .(dot)is nothing but a path it scan the current directory and we can give the different path
+                (here --formate table : means it generate the report in table formate,(-o means out put formate trivy-fs-report.html -this is a file name which the report that will be exported and .(dot)is nothing but a path it scan the current directory and we can give the different path
  
                 echo 'file scan succeful'
             }
