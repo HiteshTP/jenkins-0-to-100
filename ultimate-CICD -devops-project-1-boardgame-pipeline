@@ -1,7 +1,9 @@
 
 pipeline{
-    agent any
-    
+    agent any 
+        or
+    agent {label '<agent or slave or worker node name>'} //if u have any jenkins agent we shod define like this
+
     tools{          // tools is used when ever we install the plugin for jenkins that,plugins use inside the pipeline we need to define it
         jdk 'jdk17'
         maven 'maven3'
