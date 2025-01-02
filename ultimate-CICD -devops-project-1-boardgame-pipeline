@@ -73,10 +73,16 @@ pipeline{
                     withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
                         sh 'docker build -t boardgame .'
                         sh 'docker tag boardgame hiteshtp/boardgame'
-                        sh 'docker push hiteshtp/boardgame'
                     }
                 }
             }
-    }
+        }
+
+         stages('docker image scan'){
+            script{
+                sh 'trivy image --format table -o trivy-fs-report.html hiteshtp/boardgame'
+            }
+         }
+
     
 }
