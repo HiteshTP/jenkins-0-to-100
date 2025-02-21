@@ -1,0 +1,6 @@
+what is jenkins ? : jenkins is a very popular continuous integration and continuous delivery tool, jenkis play most important role in Devops for creating a CICD pipelines or cicd automations.
+what is a jenkins pipeline? : jenkines pipeline is suit of plugins it is used to define their software delivary process as code.
+How do you define a jenkins Pipeline? : jenkins pipeline can be define using a Jenkinsfile, which is text filewritten in Groovy syntax.jenkinsfile describe the stages steps and configuration of the pipeline
+explaine the difference between scripted and declarative pipeline ? : 
+    SCRIPTED PIPELINE: scripted pipeline is  a groovy-based pipeline it follow the gropvy syntax  and help us to define u r pipeline logic, this gives u more flexibility and pover and it also it requires more coding effort to set up u r pipeline.
+    DECLARATIVE PIPELINE : declerative pipeline is a more simpler it has a more structured syntax to defining u r pipeline code, it helps to makesit easier for read, maintain and write the cicd pipeline instructions  
