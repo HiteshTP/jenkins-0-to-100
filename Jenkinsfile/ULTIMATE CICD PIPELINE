@@ -1,0 +1,89 @@
+## ULTIMATE CICD PIPELINE ##
+
+pipeline{
+    agent any 
+        or
+    agent {label '<agent or slave or worker node name>'} //if u have any jenkins agent we shod define like this
+
+    tools{          // tools is used when ever we install the plugin for jenkins that,plugins use inside the pipeline we need to define it
+        jdk 'jdk17'
+        maven 'maven3'
+    }
+    environment{
+        SCANNER_HOME= tool 'sonar-scanner'
+    }
+    stages{
+        stage('git checkout'){
+            steps{
+                git url: 'https://github.com/HiteshTP/Boardgame-main.git', branch: 'main'
+                echo 'cloned succeful'
+            }
+        }
+        stage('compile'){
+            steps{
+                echo 'compling stage because to find out any syntax based error in pipeline or not'
+                sh 'mvn compile'
+                echo 'compile succeful'
+            }
+        }
+        stage('test'){
+            steps{
+                echo 'to find and test the functionality of the code'
+                sh 'mvn test'
+                echo 'test succeful'
+            }
+        }
+        stage('File system Scan'){
+            steps{
+                echo 'we are going to perform a vulnerability scan on our source code to find out if there is any sensitive data'
+                sh 'trivy fs .' //using this command trivy generate the report inside the concole log it is hard to analise and not a good practice
+                         or
+                sh 'trivy fs --format table -o trivy-fs-report.html .' //using this command the trivy generate the report in a specific formate and export it inside a seperate file
+                (here --formate table : means it generate the report in table formate,(-o means out put formate trivy-fs-report.html -this is a file name which the report that will be exported and .(dot)is nothing but a path it scan the current directory and we can give the different path
+ 
+                echo 'file scan succeful'
+            }
+        }
+        stage('Sonarqube analysis'){
+            steps{
+                echo 'to find and test the functionality of the code'
+                withSonarQubeEnv('sonar') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=cicd-project1 -Dsonar.projectKey=cicd-project1 \   // $SCANNER_HOME/bin/sonar-scaner means $SCANNER_HOME is a environment we are calling the sonar-scanner that present in the bin path
+                           -Dsonar.java.binaries=target/classes '''  //When you compile a Java project, the .java source files are converted into .class files, typically placed in a directory like target/classes (Maven) or build/classes/java/main 
+                    
+                }
+            }
+        }
+        stage('quality gate'){
+            steps{
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' //syntax: waitForQualityGate abortPipeline: false, credentialsID: '<give the sonarqube credential id'
+                }
+                
+            }
+        }
+        
+        stage('build'){
+            steps{
+                sh 'mvn package'
+            }
+        }
+         stage('build and Tag Docker Image and push to dockedhub'){
+            steps{
+                script{
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        sh 'docker build -t boardgame .'
+                        sh 'docker tag boardgame hiteshtp/boardgame'
+                    }
+                }
+            }
+        }
+
+         stages('docker image scan'){
+            script{
+                sh 'trivy image --format table -o trivy-fs-report.html hiteshtp/boardgame'
+            }
+         }
+
+    
+}
