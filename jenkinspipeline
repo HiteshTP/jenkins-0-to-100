@@ -1,0 +1,3 @@
+for java project
+tools jdk and maven
+stages : git checkout compile test file system scan sonarquble analysis quality gate build tag and push to docker hub 
