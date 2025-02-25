@@ -1,0 +1,23 @@
+first create a 2 instance one for Jenkins master another for slave and install the jenkins and java only in master and install the java(same version) in both master and agent
+next then go to the jenkins master and type $ cd ~/.ssh press enter
+then type $ ls after that there is one file shown that is authorized_keys
+then type $ ssh-keygen press enter enter enter 
+then type $ ls it shows 3 fils i.e,  authorized_keys, id<number>, id<numbers>.pub (here id<numbers> is known as private key and id<numbers>.pub is known as public key)
+then type $ cat id<numbers.pub> press enter then copy that public key 
+
+then go to the agent/node/slave
+then type $ cd .ssh/ and press $ ls
+then type $ vim authorized_keys  (in the end leve one line past the public key)
+
+
+
+go to the jenkins dashboard go to the nodes -> give a name to the node then click on pernment agent press create ->
+give a discription-> give the Number of executers (this means How many jobs will run at a time)-> 
+give the Remote root directory(it means what is the name of the directory in the server) go to server press pwd copy that and past it->
+give the Labels(it means we need to give the lave name correctly because in pipeline ver are going to define the labels )->  
+give the usage as Use this node as much as possible->
+give the Launch method as launch agent via SSH->
+give the Host (here we need to give the agent/node/slave IP address)-> Credentails(go to the master server in that copy the private key then go to credentails press add, then change the KIND as SSH Username with privateke, give ID name anything, give the username anything, in private key press enter directly, in down click on add and past the private key here and press ADD)
+give the Host Key Verfication stategy as non verfying Verfication Strategy
+
+
