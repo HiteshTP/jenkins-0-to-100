@@ -1,0 +1,11 @@
+if any thing uploade or changes made tn the github it automatically triger the jenkins job so we use webhooks
+
+To create a webhooks?
+go to the github
+go to the repository setting 
+go to webhook and press add webhook  
+go to Payload url in this past the jenkins url(ex:  http://3.568.658.658:8080/github-webhook)
+go to Contant type in this seect application/x-www-form-urlencoded
+go to the SSL verification in this select disableselect 
+select active press create webhook
+
