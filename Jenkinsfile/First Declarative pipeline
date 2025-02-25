@@ -1,0 +1,43 @@
+## First Declarative pipeline ##
+
+pipeline{
+    agent {label 'slave'}
+    
+    stages{
+        stage('clone'){
+            steps{
+                echo "cloning to the repository"
+                git url: "https://github.com/LondheShubham153/django-notes-app.git", branch: "main"
+                echo "cloned success"
+            }
+        }
+        stage('Build'){
+            steps{
+                echo "building the image"
+                sh 'docker build -t notes-app .'
+            }
+        }
+        stage('Push to DockerHub'){
+            steps{
+                echo "pushing the image to the docker hub"
+                withCredentials([usernamePassword('credentialsId':"<give the creaditialsid>",passwordVariable:"dockerpass<we can give any variable here>",usernameVariable:"dockeruser"<we can give any variable here>)]){
+                sh 'docker login -u ${env.dockeruser} -p ${env.dockerpass}' // for docker login we need do creditionals binding, it means we are hiding the creditionals like username and password in the environment                
+                sh 'docker tag notes-app hiteshtp/notes-app' 
+                                or
+                sh 'docker tag notes-app ${env.dockeruser}/notes-app' // we can give like this also for username because we are already defilne the user name in the creditionls so we can give directly ${env.dockeruser}
+                sh 'docker push hiteshtp/notes-app'
+                                or
+                sh 'docker push ${env.dockeruser}/notes-app'
+                }
+            }
+        }
+       
+        stage('deploying'){
+            steps{
+                sh 'docker run -d -p 8000:8000 --name a5 notes-app'
+                                    //or
+                sh 'docker-compose up -d' //if u have docker-composefile file u can do like this also, firdt u need to indtall docker-compose in the agent or worker or slave instances/node
+            }
+        }
+    }
+}
