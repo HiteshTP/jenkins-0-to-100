@@ -1,5 +1,5 @@
 pipeline{
-    agent {local 'slave'}
+    agent {label 'slave'}
     tools{
         jdk 'jdk17'
         nodejs 'node23'
